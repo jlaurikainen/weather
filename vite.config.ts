@@ -7,7 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      base: "/weather/",
       devOptions: { enabled: true },
       includeAssets: ["favicon.svg"],
       manifest: {
@@ -45,6 +44,7 @@ export default defineConfig({
       registerType: "autoUpdate",
     }),
   ],
+  base: "/weather/",
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },

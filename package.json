@@ -1,6 +1,7 @@
 {
   "name": "weather",
   "private": true,
+  "homepage": "https://jlaurikainen.github.io/weather/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

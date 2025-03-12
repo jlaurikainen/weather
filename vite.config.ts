@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      base: "/weather",
+      base: "/weather/",
       devOptions: { enabled: true },
       includeAssets: ["favicon.svg"],
       manifest: {

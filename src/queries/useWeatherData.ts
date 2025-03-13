@@ -1,27 +1,49 @@
-import { Weather } from "@/types/weather";
 import { useQuery } from "@tanstack/react-query";
 
-const BASE_URL = "https://api.open-meteo.com/v1/forecast";
+const BASE_URL =
+  "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::timevaluepair";
 
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
-  return `${BASE_URL}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m`;
+  const currentTime = new Date();
+  currentTime.setHours(currentTime.getHours(), 0, 0, 0);
+  const timeString = currentTime.toISOString();
+
+  return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${timeString}&endtime=${timeString}`;
 }
 
-function transformData(data: Weather) {
-  return {
-    temperature: data.current.temperature_2m,
-    unit: data.current_units.temperature_2m,
-  };
+function traverseXML(xml: string) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xml, "application/xml");
+
+  return Array.from(doc.getElementsByTagName("wfs:member")).map((member) => {
+    const series = member.getElementsByTagName("wml2:MeasurementTimeseries")[0];
+    const points = Array.from(series.getElementsByTagName("wml2:point"));
+    const pointValues = [];
+
+    for (const point of points) {
+      const time = point.getElementsByTagName("wml2:time")[0].textContent;
+      const value = parseFloat(
+        `${point.getElementsByTagName("wml2:value")[0].textContent}`
+      );
+
+      pointValues.push({ time, value });
+    }
+
+    return {
+      type: series.getAttribute("gml:id")?.replace("mts-1-1-", ""),
+      values: pointValues,
+    };
+  });
 }
 
 async function fetchData(location: GeolocationCoordinates) {
   return fetch(getWeatherURL(location))
-    .then((res): Promise<Weather> => res.json())
-    .then(transformData);
+    .then((res) => res.text())
+    .then(traverseXML);
 }
 
 export function useWeatherData(location: GeolocationCoordinates) {
-  return useQuery<ReturnType<typeof transformData>>({
+  return useQuery<ReturnType<typeof traverseXML>>({
     queryKey: ["weather-data"],
     queryFn: () => fetchData(location),
     refetchInterval: 1000 * 60 * 5,

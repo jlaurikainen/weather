@@ -5,7 +5,9 @@ const BASE_URL =
 
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
   const currentTime = new Date();
-  currentTime.setHours(currentTime.getHours(), 0, 0, 0);
+  const timeOffset =
+    currentTime.getHours() + (currentTime.getMinutes() > 30 ? 1 : 0);
+  currentTime.setHours(timeOffset, 0, 0, 0);
   const timeString = currentTime.toISOString();
 
   return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${timeString}&endtime=${timeString}`;

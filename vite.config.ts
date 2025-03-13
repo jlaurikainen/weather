@@ -11,6 +11,7 @@ export default defineConfig({
       includeAssets: ["favicon.svg"],
       manifest: {
         description: "Weather App",
+        background_color: "#0f3b3a",
         icons: [
           {
             src: "/weather/pwa-192x192.png",

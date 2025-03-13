@@ -23,7 +23,7 @@ body {
   color: var(--color-grey);
   font-family: system-ui;
   background-image: linear-gradient(180deg, var(--color-k), var(--color-K));
-  background-repeat: no-repeat;
+  background-repeat: cover;
   overflow: hidden;
 }
 

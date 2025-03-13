@@ -21,10 +21,12 @@ export function CurrentTemperature(props: Props) {
     return <p className={`${styles.content} ${styles.temperature}`}>No Data</p>;
   }
 
+  const temperature = data.find((value) => value.type === "Temperature")
+    ?.values[0].value;
+
   return (
     <h1 className={`${styles.content} ${styles.temperature}`}>
-      {formatDecimal(data.temperature)}
-      {data.unit}
+      {temperature ? `${formatDecimal(temperature)}°C` : null}
     </h1>
   );
 }

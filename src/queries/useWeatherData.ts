@@ -1,14 +1,11 @@
+import { getClosestFullHour } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL =
   "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::timevaluepair";
 
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
-  const currentTime = new Date();
-  const timeOffset =
-    currentTime.getHours() + (currentTime.getMinutes() > 30 ? 1 : 0);
-  currentTime.setHours(timeOffset, 0, 0, 0);
-  const timeString = currentTime.toISOString();
+  const timeString = getClosestFullHour().toISOString();
 
   return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${timeString}&endtime=${timeString}`;
 }
@@ -25,7 +22,7 @@ function traverseXML(xml: string) {
     for (const point of points) {
       const time = point.getElementsByTagName("wml2:time")[0].textContent;
       const value = parseFloat(
-        `${point.getElementsByTagName("wml2:value")[0].textContent}`
+        `${point.getElementsByTagName("wml2:value")[0].textContent}`,
       );
 
       pointValues.push({ time, value });

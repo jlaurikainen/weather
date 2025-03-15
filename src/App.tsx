@@ -1,4 +1,4 @@
-import { CurrentTemperature } from "@/features/current-temperature";
+import { Forecast } from "@/features/forecast";
 import { useGeolocation } from "@/hooks/useGeolocation";
 
 export function App() {
@@ -8,5 +8,5 @@ export function App() {
     return null;
   }
 
-  return <CurrentTemperature location={location} />;
+  return <Forecast location={location} />;
 }

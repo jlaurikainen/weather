@@ -1,18 +1,23 @@
-import { getClosestFullHour } from "@/utils/time";
+import { addDays, getClosestFullHour } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL =
   "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::timevaluepair";
 
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
-  const timeString = getClosestFullHour().toISOString();
+  const startTime = getClosestFullHour();
+  const startTimeString = startTime.toISOString();
+  const endTime = addDays(startTime, 1);
+  const endTimeString = endTime.toISOString();
 
-  return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${timeString}&endtime=${timeString}`;
+  return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
 }
 
 function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
+
+  console.log(doc);
 
   return Array.from(doc.getElementsByTagName("wfs:member")).map((member) => {
     const series = member.getElementsByTagName("wml2:MeasurementTimeseries")[0];

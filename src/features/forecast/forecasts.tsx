@@ -7,7 +7,7 @@ type Props = {
 
 export function Forecasts(props: Props) {
   return (
-    <div className="flex max-w-full self-center overflow-x-auto opacity-75">
+    <div className="flex max-w-full self-center overflow-x-auto p-2 opacity-75">
       {props.forecasts.map((forecast) => (
         <Forecast key={forecast.time.toString()} forecast={forecast} />
       ))}

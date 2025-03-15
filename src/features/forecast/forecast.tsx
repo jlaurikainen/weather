@@ -7,7 +7,7 @@ type Props = {
 
 export function Forecast(props: Props) {
   return (
-    <div className="flex w-14 shrink-0 flex-col items-center gap-0.5">
+    <div className="flex w-18 shrink-0 flex-col items-center gap-0.5 font-extralight">
       <h1>{formatDecimal(props.forecast.value)}°C</h1>
       <h2 className="flex flex-col items-center">
         {props.forecast.time.toLocaleTimeString("fi", {

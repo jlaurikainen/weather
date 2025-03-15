@@ -9,32 +9,34 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      base: "/weather/",
       devOptions: { enabled: true },
       includeAssets: ["favicon.svg, Inter.ttf"],
       manifest: {
         description: "Weather App",
-        background_color: "#0f3b3a",
+        display: "fullscreen",
+        background_color: "#0f172a",
         icons: [
           {
-            src: "/weather/pwa-192x192.png",
+            src: "/pwa-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/weather/pwa-512x512.png",
+            src: "/pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/weather/pwa-maskable-192x192.png",
+            src: "/pwa-maskable-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "/weather/pwa-maskable-512x512.png",
+            src: "/pwa-maskable-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -42,12 +44,11 @@ export default defineConfig({
         ],
         name: "Weather App",
         short_name: "Weather",
-        theme_color: "#0f3b3a",
+        theme_color: "#0f172a",
       },
       registerType: "autoUpdate",
     }),
   ],
-  base: "/weather/",
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },

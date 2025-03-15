@@ -9,7 +9,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      base: "/weather/",
       devOptions: { enabled: true },
       includeAssets: ["favicon.svg, Inter.ttf"],
       manifest: {
@@ -49,6 +48,7 @@ export default defineConfig({
       registerType: "autoUpdate",
     }),
   ],
+  base: "/weather/",
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },

@@ -1,5 +1,5 @@
 import { WeatherData } from "@/queries/useWeatherData";
-import { formatDecimal } from "@/utils/number";
+import { Forecast } from "./forecast";
 
 type Props = {
   forecasts: WeatherData["members"][0]["values"];
@@ -7,17 +7,9 @@ type Props = {
 
 export function Forecasts(props: Props) {
   return (
-    <div className="flex overflow-x-auto">
+    <div className="flex overflow-x-auto opacity-75">
       {props.forecasts.map((forecast) => (
-        <div key={forecast.time.toString()}>
-          <h1>{formatDecimal(forecast.value)}</h1>
-          <h2>
-            {forecast.time.toLocaleTimeString("fi", {
-              hour: "numeric",
-              minute: "2-digit",
-            })}
-          </h2>
-        </div>
+        <Forecast key={forecast.time.toString()} forecast={forecast} />
       ))}
     </div>
   );

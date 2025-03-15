@@ -1,4 +1,4 @@
-import { addDays, addHours, getClosestFullHour } from "@/utils/time";
+import { addDays, getClosestFullHour } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
 
 export type WeatherData = ReturnType<typeof traverseXML>;
@@ -9,7 +9,7 @@ const BASE_URL =
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
   const startTime = getClosestFullHour();
   const startTimeString = startTime.toISOString();
-  const endTime = addHours(addDays(startTime, 1), -1);
+  const endTime = addDays(startTime, 1);
   const endTimeString = endTime.toISOString();
 
   return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;

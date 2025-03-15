@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Inter";
+  src: url("./Inter.ttf") format("truetype");
+}
+
+* {
+  scrollbar-color: #ffffff30 transparent;
+  scrollbar-width: thin;
+}

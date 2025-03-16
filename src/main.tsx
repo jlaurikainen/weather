@@ -11,12 +11,12 @@ if (!rootElement) {
 }
 
 const root = createRoot(rootElement);
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );

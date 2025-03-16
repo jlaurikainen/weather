@@ -18,8 +18,10 @@ function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
 function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
-  const location =
-    doc.getElementsByTagName("target:region")[0].textContent ?? "";
+  const locationName =
+    doc
+      .getElementsByTagName("sams:shape")?.[0]
+      ?.getElementsByTagName("gml:name")?.[0]?.textContent ?? "";
 
   const members = Array.from(doc.getElementsByTagName("wfs:member")).map(
     (member) => {
@@ -47,7 +49,7 @@ function traverseXML(xml: string) {
     },
   );
 
-  return { location, members };
+  return { location: locationName, members };
 }
 
 async function fetchData(location: GeolocationCoordinates) {

@@ -1,10 +1,10 @@
 import { addDays, getClosestFullHour } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
+import { BASE_URL } from "./constants";
 
 export type WeatherData = ReturnType<typeof traverseXML>;
 
-const BASE_URL =
-  "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::timevaluepair";
+const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
 
 function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
   const startTime = getClosestFullHour();
@@ -12,7 +12,7 @@ function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
   const endTime = addDays(startTime, 1);
   const endTimeString = endTime.toISOString();
 
-  return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
+  return `${FEATURE_URL}&latlon=${latitude},${longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
 }
 
 function traverseXML(xml: string) {
@@ -60,7 +60,7 @@ async function fetchData(location: GeolocationCoordinates) {
 
 export function useWeatherData(location: GeolocationCoordinates) {
   return useQuery<WeatherData>({
-    queryKey: ["weather-data"],
+    queryKey: ["forecast"],
     queryFn: () => fetchData(location),
     refetchInterval: 1000 * 60 * 5,
   });

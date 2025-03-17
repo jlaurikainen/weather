@@ -1,21 +1,21 @@
 import { createContext, useContext } from "react";
 
-export type GeoIdContextProps = {
+export type LocationContextProps = {
   geoId: number | undefined;
   location: string | undefined;
   setGeoId: (geoId: number) => void;
   setLocation: (location: string) => void;
 };
 
-const GeoIdContext = createContext<GeoIdContextProps | null>(null);
+const LocationContext = createContext<LocationContextProps | null>(null);
 
-export const GeoIdProvider = GeoIdContext.Provider;
+export const LocationProvider = LocationContext.Provider;
 
-export function useGeoIdContext() {
-  const context = useContext(GeoIdContext);
+export function useLocationContext() {
+  const context = useContext(LocationContext);
 
   if (!context) {
-    throw new Error("GeoIdContext used outside its provider!");
+    throw new Error("LocationContext used outside its provider!");
   }
 
   return context;

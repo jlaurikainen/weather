@@ -1,19 +1,17 @@
-import { useGeoIdContext } from "@/contexts/geoid";
+import { useLocationContext } from "@/contexts/geoid";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { useForecasts } from "@/queries/forecasts";
 import { useEffect } from "react";
 import { Forecast } from "./forecast";
 
-type Props = {
-  location: GeolocationCoordinates;
-};
-
-export function Forecasts(props: Props) {
-  const { data } = useForecasts(props.location);
-  const { setGeoId, setLocation } = useGeoIdContext();
+export function Forecasts() {
+  const { geolocation } = useGeolocation();
+  const { data } = useForecasts(geolocation);
+  const { setGeoId, setLocation } = useLocationContext();
 
   useEffect(() => {
     if (data) {
-      setGeoId(data.geoid);
+      setGeoId(data.geoId);
       setLocation(data.location);
     }
   }, [data, setGeoId, setLocation]);

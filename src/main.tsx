@@ -11,7 +11,7 @@ if (!rootElement) {
 }
 
 const root = createRoot(rootElement);
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 root.render(
   <StrictMode>

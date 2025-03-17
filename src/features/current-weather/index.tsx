@@ -1,9 +1,9 @@
-import { useGeoIdContext } from "@/contexts/geoid";
+import { useLocationContext } from "@/contexts/geoid";
 import { useCurrentWeather } from "@/queries/current-weather";
 import { formatDecimal } from "@/utils/number";
 
 export function CurrentWeather() {
-  const { geoId, location } = useGeoIdContext();
+  const { geoId, location } = useLocationContext();
   const { data } = useCurrentWeather(geoId);
 
   return (

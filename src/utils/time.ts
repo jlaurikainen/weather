@@ -1,15 +1,14 @@
 export function getClosestFullHour() {
   const currentTime = new Date();
-  const hourOffset = currentTime.getMinutes() > 30 ? 1 : 0;
   currentTime.setMinutes(0, 0, 0);
 
-  return addHours(currentTime, hourOffset);
+  return addHours(currentTime, 1);
 }
 
 export function getClosestFlooredMinutes() {
   const currentTime = new Date();
   const currentMinutes = currentTime.getMinutes();
-  const flooredMinutes = currentMinutes - (currentMinutes % 10) - 5;
+  const flooredMinutes = currentMinutes - (currentMinutes % 10) - 10;
   currentTime.setMinutes(flooredMinutes, 0, 0);
 
   return currentTime;

@@ -1,4 +1,4 @@
-import { WeatherData } from "@/queries/useForecasts";
+import { WeatherData } from "@/queries/forecasts";
 import { formatDecimal } from "@/utils/number";
 
 type Props = {

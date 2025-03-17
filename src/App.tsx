@@ -1,4 +1,4 @@
-import { Forecast } from "@/features/forecast";
+import { Forecasts } from "@/features/forecasts";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useState } from "react";
 import { GeoIdProvider } from "./contexts/geoid";
@@ -16,7 +16,7 @@ export function App() {
 
   return (
     <GeoIdProvider value={{ geoId, setGeoId }}>
-      <Forecast location={location} />
+      <Forecasts location={location} />
     </GeoIdProvider>
   );
 }

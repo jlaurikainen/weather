@@ -5,7 +5,7 @@ type Props = {
   temperature: number;
 };
 
-export function CurrentTemperature(props: Props) {
+export function CurrentWeather(props: Props) {
   return (
     <div>
       <h2 className="text-center text-2xl font-extralight">{props.location}</h2>

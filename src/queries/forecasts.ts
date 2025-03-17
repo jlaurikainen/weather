@@ -65,7 +65,7 @@ async function fetchData(geolocation: GeolocationCoordinates | undefined) {
 
 export function useForecasts(geolocation: GeolocationCoordinates | undefined) {
   return useQuery({
-    queryKey: ["forecast"],
+    queryKey: ["forecast", geolocation],
     queryFn: () => fetchData(geolocation),
     refetchInterval: 1000 * 60 * 5,
     enabled: !!geolocation,

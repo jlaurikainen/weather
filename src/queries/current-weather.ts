@@ -33,7 +33,7 @@ function traverseXML(xml: string) {
 
 export function useCurrentWeather(geoId: number | undefined) {
   return useQuery({
-    queryKey: ["current-weather"],
+    queryKey: ["current-weather", geoId],
     queryFn: () => fetchData(geoId),
     refetchInterval: 1000 * 60 * 5,
     enabled: !!geoId,

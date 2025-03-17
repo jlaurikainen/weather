@@ -46,6 +46,9 @@ export default defineConfig({
         theme_color: "#0f172a",
       },
       registerType: "autoUpdate",
+      workbox: {
+        cleanupOutdatedCaches: true,
+      },
     }),
   ],
   base: "/weather/",

@@ -13,7 +13,7 @@ export default defineConfig({
       includeAssets: ["favicon.svg, Inter.ttf"],
       manifest: {
         description: "Weather App",
-        display: "fullscreen",
+        display: "standalone",
         background_color: "#0f172a",
         icons: [
           {

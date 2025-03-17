@@ -1,6 +1,6 @@
 export function formatDecimal(
   number: number,
-  options?: Intl.NumberFormatOptions
+  options?: Intl.NumberFormatOptions,
 ) {
   return number.toLocaleString("fi", {
     minimumFractionDigits: 1,

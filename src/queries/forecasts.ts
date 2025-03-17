@@ -1,28 +1,33 @@
 import { addDays, getClosestFullHour } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
+import { BASE_URL } from "./constants";
 
 export type WeatherData = ReturnType<typeof traverseXML>;
 
-const BASE_URL =
-  "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::timevaluepair";
+const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
 
-function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
+function getUrlWithParams(geolocation: GeolocationCoordinates | undefined) {
   const startTime = getClosestFullHour();
   const startTimeString = startTime.toISOString();
   const endTime = addDays(startTime, 1);
   const endTimeString = endTime.toISOString();
 
-  return `${BASE_URL}&latlon=${latitude},${longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
+  return `${FEATURE_URL}&latlon=${geolocation?.latitude},${geolocation?.longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
 }
 
 function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
-  const locationName =
-    doc
-      .getElementsByTagName("sams:shape")?.[0]
-      ?.getElementsByTagName("gml:name")?.[0]?.textContent ?? "";
 
+  const locationCollection = doc.getElementsByTagName(
+    "target:LocationCollection",
+  )?.[0];
+  const geoId = parseInt(
+    locationCollection?.getElementsByTagName("gml:identifier")?.[0]
+      ?.textContent ?? "",
+  );
+  const location =
+    locationCollection.getElementsByTagName("gml:name")?.[0].textContent ?? "";
   const members = Array.from(doc.getElementsByTagName("wfs:member")).map(
     (member) => {
       const series = member.getElementsByTagName(
@@ -49,19 +54,20 @@ function traverseXML(xml: string) {
     },
   );
 
-  return { location: locationName, members };
+  return { geoId, location, members };
 }
 
-async function fetchData(location: GeolocationCoordinates) {
-  return fetch(getWeatherURL(location))
+async function fetchData(geolocation: GeolocationCoordinates | undefined) {
+  return fetch(getUrlWithParams(geolocation))
     .then((res) => res.text())
     .then(traverseXML);
 }
 
-export function useWeatherData(location: GeolocationCoordinates) {
-  return useQuery<WeatherData>({
-    queryKey: ["weather-data"],
-    queryFn: () => fetchData(location),
+export function useForecasts(geolocation: GeolocationCoordinates | undefined) {
+  return useQuery({
+    queryKey: ["forecast"],
+    queryFn: () => fetchData(geolocation),
     refetchInterval: 1000 * 60 * 5,
+    enabled: !!geolocation,
   });
 }

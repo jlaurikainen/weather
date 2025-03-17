@@ -1,4 +1,6 @@
+import { useGeoIdContext } from "@/contexts/geoid";
 import { useForecasts } from "@/queries/forecasts";
+import { useEffect } from "react";
 import { Forecast } from "./forecast";
 
 type Props = {
@@ -7,14 +9,17 @@ type Props = {
 
 export function Forecasts(props: Props) {
   const { data } = useForecasts(props.location);
+  const { setGeoId } = useGeoIdContext();
 
-  if (!data) {
-    return null;
-  }
+  useEffect(() => {
+    if (data) {
+      setGeoId(data.geoid);
+    }
+  }, [data, setGeoId]);
 
-  const forecasts = data.members.filter(
-    (value) => value.type === "Temperature",
-  )[0].values;
+  const forecasts =
+    data?.members.filter((value) => value.type === "Temperature")[0].values ??
+    [];
 
   return (
     <div className="flex max-w-full self-center overflow-x-auto p-2 opacity-75">

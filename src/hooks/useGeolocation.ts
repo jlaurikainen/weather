@@ -15,15 +15,15 @@ function setStorageValue(location: GeolocationCoordinates) {
 }
 
 export function useGeolocation() {
-  const [location, setLocation] = useState<GeolocationCoordinates | undefined>(
-    getStorageValue,
-  );
+  const [geolocation, setGeolocation] = useState<
+    GeolocationCoordinates | undefined
+  >(getStorageValue);
   const [error, setError] = useState<GeolocationPositionError>();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setLocation(position.coords);
+        setGeolocation(position.coords);
       },
       (error) => {
         setError(error);
@@ -32,10 +32,10 @@ export function useGeolocation() {
   }, []);
 
   useEffect(() => {
-    if (location) {
-      setStorageValue(location);
+    if (geolocation) {
+      setStorageValue(geolocation);
     }
-  }, [location]);
+  }, [geolocation]);
 
-  return { location, error };
+  return { geolocation, error };
 }

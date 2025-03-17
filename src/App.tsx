@@ -7,18 +7,19 @@ import { useReloadOnResume } from "./hooks/useReloadOnResume";
 
 export function App() {
   const [geoId, setGeoId] = useState<number>();
-  const { location } = useGeolocation();
+  const [location, setLocation] = useState<string>();
+  const { geolocation } = useGeolocation();
 
   useReloadOnResume();
 
-  if (!location) {
+  if (!geolocation) {
     return null;
   }
 
   return (
-    <GeoIdProvider value={{ geoId, setGeoId }}>
+    <GeoIdProvider value={{ geoId, location, setGeoId, setLocation }}>
       <CurrentWeather />
-      <Forecasts location={location} />
+      <Forecasts location={geolocation} />
     </GeoIdProvider>
   );
 }

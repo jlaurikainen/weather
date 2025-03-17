@@ -9,7 +9,7 @@ export function getClosestFullHour() {
 export function getClosestFlooredMinutes() {
   const currentTime = new Date();
   const currentMinutes = currentTime.getMinutes();
-  const flooredMinutes = currentMinutes - (currentMinutes % 10 || 10);
+  const flooredMinutes = currentMinutes - (currentMinutes % 10) - 5;
   currentTime.setMinutes(flooredMinutes, 0, 0);
 
   return currentTime;

@@ -18,10 +18,15 @@ function getUrlWithParams({ latitude, longitude }: GeolocationCoordinates) {
 function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
+
+  const locationCollection = doc.getElementsByTagName(
+    "target:LocationCollection",
+  )?.[0];
   const geoid =
-    doc
-      .getElementsByTagName("target:LocationCollection")?.[0]
-      ?.getElementsByTagName("gml:identifier")?.[0]?.textContent ?? "";
+    locationCollection?.getElementsByTagName("gml:identifier")?.[0]
+      ?.textContent ?? "";
+  const location =
+    locationCollection.getElementsByTagName("gml:name")?.[0].textContent ?? "";
 
   const members = Array.from(doc.getElementsByTagName("wfs:member")).map(
     (member) => {
@@ -49,7 +54,7 @@ function traverseXML(xml: string) {
     },
   );
 
-  return { geoid: parseInt(geoid), members };
+  return { geoid: parseInt(geoid), location, members };
 }
 
 async function fetchData(location: GeolocationCoordinates) {

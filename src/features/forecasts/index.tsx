@@ -9,13 +9,14 @@ type Props = {
 
 export function Forecasts(props: Props) {
   const { data } = useForecasts(props.location);
-  const { setGeoId } = useGeoIdContext();
+  const { setGeoId, setLocation } = useGeoIdContext();
 
   useEffect(() => {
     if (data) {
       setGeoId(data.geoid);
+      setLocation(data.location);
     }
-  }, [data, setGeoId]);
+  }, [data, setGeoId, setLocation]);
 
   const forecasts =
     data?.members.filter((value) => value.type === "Temperature")[0].values ??

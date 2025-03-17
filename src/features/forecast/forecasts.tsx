@@ -1,4 +1,4 @@
-import { WeatherData } from "@/queries/useWeatherData";
+import { WeatherData } from "@/queries/useForecasts";
 import { Forecast } from "./forecast";
 
 type Props = {

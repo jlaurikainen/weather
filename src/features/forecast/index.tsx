@@ -1,4 +1,4 @@
-import { useWeatherData } from "@/queries/useWeatherData";
+import { useForecasts } from "@/queries/useForecasts";
 import { CurrentTemperature } from "./current-temperature";
 import { Forecasts } from "./forecasts";
 
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export function Forecast(props: Props) {
-  const { data } = useWeatherData(props.location);
+  const { data } = useForecasts(props.location);
 
   if (!data) {
     return null;

@@ -6,7 +6,7 @@ export type WeatherData = ReturnType<typeof traverseXML>;
 
 const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
 
-function getWeatherURL({ latitude, longitude }: GeolocationCoordinates) {
+function getUrlWithParams({ latitude, longitude }: GeolocationCoordinates) {
   const startTime = getClosestFullHour();
   const startTimeString = startTime.toISOString();
   const endTime = addDays(startTime, 1);
@@ -53,12 +53,12 @@ function traverseXML(xml: string) {
 }
 
 async function fetchData(location: GeolocationCoordinates) {
-  return fetch(getWeatherURL(location))
+  return fetch(getUrlWithParams(location))
     .then((res) => res.text())
     .then(traverseXML);
 }
 
-export function useWeatherData(location: GeolocationCoordinates) {
+export function useForecasts(location: GeolocationCoordinates) {
   return useQuery<WeatherData>({
     queryKey: ["forecast"],
     queryFn: () => fetchData(location),

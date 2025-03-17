@@ -1,15 +1,7 @@
-import { getClosestFlooredMinutes } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./constants";
 
-const FEATURE_URL = `${BASE_URL}fmi::observations::weather::simple`;
-
-function getUrlWithParams(geoId: number | undefined) {
-  const startTime = getClosestFlooredMinutes();
-  const startTimeString = startTime.toISOString();
-
-  return `${FEATURE_URL}&geoid=${geoId}&starttime=${startTimeString}`;
-}
+const FEATURE_URL = `${BASE_URL}fmi::observations::weather::timevaluepair`;
 
 async function fetchData(geoId: number | undefined) {
   return fetch(getUrlWithParams(geoId))
@@ -17,15 +9,27 @@ async function fetchData(geoId: number | undefined) {
     .then(traverseXML);
 }
 
+function getUrlWithParams(geoId: number | undefined) {
+  const thirtyMinutesAgo = new Date();
+  thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30, 0, 0);
+  const startTime = thirtyMinutesAgo.toISOString();
+
+  return `${FEATURE_URL}&geoid=${geoId}&starttime=${startTime}`;
+}
+
 function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
 
+  const temperatures = Array.from(doc.getElementsByTagName("om:result"))[0];
+  const latestMeasurement = Array.from(
+    temperatures.getElementsByTagName("wml2:MeasurementTVP"),
+  ).at(-1);
   const temperature = parseFloat(
-    doc.getElementsByTagName("BsWfs:ParameterValue")[0].textContent ?? "",
+    latestMeasurement?.getElementsByTagName("wml2:value")[0].textContent ?? "",
   );
   const time = new Date(
-    doc.getElementsByTagName("BsWfs:Time")[0].textContent ?? "",
+    latestMeasurement?.getElementsByTagName("wml2:time")[0].textContent ?? "",
   );
 
   return { temperature, time };

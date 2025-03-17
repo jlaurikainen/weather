@@ -6,6 +6,12 @@ export type WeatherData = ReturnType<typeof traverseXML>;
 
 const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
 
+async function fetchData(geolocation: GeolocationCoordinates | undefined) {
+  return fetch(getUrlWithParams(geolocation))
+    .then((res) => res.text())
+    .then(traverseXML);
+}
+
 function getUrlWithParams(geolocation: GeolocationCoordinates | undefined) {
   const startTime = getClosestFullHour();
   const startTimeString = startTime.toISOString();
@@ -55,12 +61,6 @@ function traverseXML(xml: string) {
   );
 
   return { geoId, location, members };
-}
-
-async function fetchData(geolocation: GeolocationCoordinates | undefined) {
-  return fetch(getUrlWithParams(geolocation))
-    .then((res) => res.text())
-    .then(traverseXML);
 }
 
 export function useForecasts(geolocation: GeolocationCoordinates | undefined) {

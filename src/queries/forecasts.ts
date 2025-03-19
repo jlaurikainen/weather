@@ -64,10 +64,10 @@ function traverseXML(xml: string) {
 }
 
 export function useForecasts(geolocation: GeolocationCoordinates | undefined) {
-  return useQuery({
+  return useQuery<WeatherData>({
     queryKey: ["forecast", geolocation],
     queryFn: () => fetchData(geolocation),
-    initialData: keepPreviousData,
+    placeholderData: keepPreviousData,
     refetchInterval: 1000 * 60 * 5,
     enabled: !!geolocation,
   });

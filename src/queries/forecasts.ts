@@ -1,5 +1,5 @@
 import { addDays, getClosestFullHour } from "@/utils/time";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./constants";
 
 export type WeatherData = ReturnType<typeof traverseXML>;
@@ -67,6 +67,7 @@ export function useForecasts(geolocation: GeolocationCoordinates | undefined) {
   return useQuery({
     queryKey: ["forecast", geolocation],
     queryFn: () => fetchData(geolocation),
+    initialData: keepPreviousData,
     refetchInterval: 1000 * 60 * 5,
     enabled: !!geolocation,
   });

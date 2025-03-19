@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       devOptions: { enabled: true },
-      includeAssets: ["favicon.svg, Inter.ttf"],
+      includeAssets: ["favicon.svg, Inter.ttf", "cities.json"],
       manifest: {
         description: "Weather App",
         display: "standalone",

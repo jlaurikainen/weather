@@ -4,7 +4,7 @@ import { List } from "@/components/atoms/list";
 
 export function Temp() {
   return (
-    <div className="flex flex-col items-start gap-8">
+    <div className="flex flex-col gap-2">
       <Button>Button</Button>
 
       <Input defaultValue="Value" />

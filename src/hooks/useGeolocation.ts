@@ -28,6 +28,9 @@ export function useGeolocation() {
       (error) => {
         setError(error);
       },
+      {
+        enableHighAccuracy: false,
+      },
     );
   }, []);
 

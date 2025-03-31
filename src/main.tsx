@@ -1,8 +1,9 @@
+import { App } from "@/App.tsx";
+import "@/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./App.tsx";
-import "./global.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const rootElement = document.getElementById("root");
 
@@ -11,12 +12,13 @@ if (!rootElement) {
 }
 
 const root = createRoot(rootElement);
+const router = createBrowserRouter([{ path: "/weather", Component: App }]);
 const queryClient = new QueryClient();
 
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>,
 );

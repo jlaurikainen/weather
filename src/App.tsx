@@ -1,19 +1,22 @@
+import { CurrentWeather } from "@/features/current-weather";
 import { Forecasts } from "@/features/forecasts";
-import { useState } from "react";
-import { LocationProvider } from "./contexts/geoid";
-import { CurrentWeather } from "./features/current-weather";
-import { useReloadOnResume } from "./hooks/useReloadOnResume";
+import { useReloadOnResume } from "@/hooks/useReloadOnResume";
+import { Fragment } from "react";
+import { LocationSelection } from "./features/location-selection";
+import { useInitializeParams } from "./hooks/useInitializeParams";
 
 export function App() {
-  const [geoId, setGeoId] = useState<number>();
-  const [location, setLocation] = useState<string>();
-
+  useInitializeParams();
   useReloadOnResume();
 
   return (
-    <LocationProvider value={{ geoId, location, setGeoId, setLocation }}>
-      <CurrentWeather />
-      <Forecasts />
-    </LocationProvider>
+    <Fragment>
+      <div className="flex flex-1 flex-col justify-center gap-8">
+        <CurrentWeather />
+        <Forecasts />
+      </div>
+
+      <LocationSelection />
+    </Fragment>
   );
 }

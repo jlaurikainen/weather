@@ -6,19 +6,19 @@ export type WeatherData = ReturnType<typeof traverseXML>;
 
 const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
 
-async function fetchData(geolocation: GeolocationCoordinates | undefined) {
-  return fetch(getUrlWithParams(geolocation))
+async function fetchData(place: string | null) {
+  return fetch(getUrlWithParams(place))
     .then((res) => res.text())
     .then(traverseXML);
 }
 
-function getUrlWithParams(geolocation: GeolocationCoordinates | undefined) {
+function getUrlWithParams(place: string | null) {
   const startTime = getClosestFullHour();
   const startTimeString = startTime.toISOString();
   const endTime = addDays(startTime, 1);
   const endTimeString = endTime.toISOString();
 
-  return `${FEATURE_URL}&latlon=${geolocation?.latitude},${geolocation?.longitude}&starttime=${startTimeString}&endtime=${endTimeString}`;
+  return `${FEATURE_URL}&place=${place}&starttime=${startTimeString}&endtime=${endTimeString}`;
 }
 
 function traverseXML(xml: string) {
@@ -63,12 +63,12 @@ function traverseXML(xml: string) {
   return { geoId, location, members };
 }
 
-export function useForecasts(geolocation: GeolocationCoordinates | undefined) {
+export function useForecasts(place: string | null) {
   return useQuery<WeatherData>({
-    queryKey: ["forecast", geolocation],
-    queryFn: () => fetchData(geolocation),
+    queryKey: ["forecast", place],
+    queryFn: () => fetchData(place),
     placeholderData: keepPreviousData,
     refetchInterval: 1000 * 60 * 5,
-    enabled: !!geolocation,
+    enabled: !!place,
   });
 }

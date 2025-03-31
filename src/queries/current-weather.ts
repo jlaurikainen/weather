@@ -1,20 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./constants";
 
 const FEATURE_URL = `${BASE_URL}fmi::observations::weather::timevaluepair`;
 
-async function fetchData(geoId: number | undefined) {
-  return fetch(getUrlWithParams(geoId))
+async function fetchData(place: string | null) {
+  return fetch(getUrlWithParams(place))
     .then((res) => res.text())
     .then(traverseXML);
 }
 
-function getUrlWithParams(geoId: number | undefined) {
+function getUrlWithParams(place: string | null) {
   const thirtyMinutesAgo = new Date();
   thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30, 0, 0);
   const startTime = thirtyMinutesAgo.toISOString();
 
-  return `${FEATURE_URL}&geoid=${geoId}&starttime=${startTime}`;
+  return `${FEATURE_URL}&place=${place}&starttime=${startTime}`;
 }
 
 function traverseXML(xml: string) {
@@ -35,11 +35,12 @@ function traverseXML(xml: string) {
   return { temperature, time };
 }
 
-export function useCurrentWeather(geoId: number | undefined) {
+export function useCurrentWeather(place: string | null) {
   return useQuery({
-    queryKey: ["current-weather", geoId],
-    queryFn: () => fetchData(geoId),
+    queryKey: ["current-weather", place],
+    queryFn: () => fetchData(place),
+    placeholderData: keepPreviousData,
     refetchInterval: 1000 * 60 * 5,
-    enabled: !!geoId,
+    enabled: !!place,
   });
 }

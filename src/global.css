@@ -12,6 +12,9 @@
 
 @theme {
   --animate-in: in 150ms ease forwards;
+  --color-alabaster: #f1f2eb;
+  --color-gunmetal: #2f323a;
+  --color-outer-space: #42454c;
 
   @keyframes in {
     from {

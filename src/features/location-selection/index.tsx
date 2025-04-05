@@ -23,6 +23,11 @@ export function LocationSelection() {
     setFilter(event.target.value);
   }
 
+  function onClose() {
+    closeMenu();
+    setFilter("");
+  }
+
   function onSelectCity(event: PointerEvent<HTMLButtonElement>) {
     const selectedCity = event.currentTarget.innerText;
 
@@ -38,23 +43,25 @@ export function LocationSelection() {
         {params.get("q") ?? "Select Location"}
       </Button>
 
-      <Menu ref={menuRef} onCancel={closeMenu} onClose={closeMenu}>
-        <div className="sticky top-0 bg-slate-800 p-2">
+      <Menu ref={menuRef} onCancel={onClose} onClose={onClose}>
+        <div className="overflow-hidden p-2">
           <Input
             autoFocus
             onChange={onChangeFilter}
             placeholder="Search here..."
             value={filter}
           />
-        </div>
 
-        <List>
-          {filteredCities.map((c) => (
-            <List.Item key={c} onClick={onSelectCity}>
-              {c}
-            </List.Item>
-          ))}
-        </List>
+          <div className="mt-2 max-h-80 overflow-auto">
+            <List>
+              {filteredCities.map((c) => (
+                <List.Item key={c} onClick={onSelectCity}>
+                  {c}
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        </div>
       </Menu>
     </div>
   );

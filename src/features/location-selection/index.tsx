@@ -32,7 +32,7 @@ export function LocationSelection() {
     const selectedCity = event.currentTarget.innerText;
 
     localStorage.setItem("q", selectedCity);
-    setParams({ q: selectedCity });
+    setParams({ q: selectedCity }, { replace: true });
     setFilter("");
     closeMenu();
   }

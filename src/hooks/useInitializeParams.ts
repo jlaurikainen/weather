@@ -9,6 +9,6 @@ export function useInitializeParams() {
 
     if (!storedLocation) return;
 
-    setParams({ q: storedLocation });
+    setParams({ q: storedLocation }, { replace: true });
   }, [setParams]);
 }

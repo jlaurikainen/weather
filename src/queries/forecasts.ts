@@ -4,7 +4,7 @@ import { BASE_URL } from "./constants";
 
 export type WeatherData = ReturnType<typeof traverseXML>;
 
-const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::timevaluepair`;
+const FEATURE_URL = `${BASE_URL}fmi::forecast::edited::weather::scandinavia::point::multipointcoverage`;
 
 async function fetchData(place: string | null) {
   return fetch(getUrlWithParams(place))
@@ -25,42 +25,48 @@ function traverseXML(xml: string) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "application/xml");
 
-  const locationCollection = doc.getElementsByTagName(
-    "target:LocationCollection",
-  )?.[0];
-  const geoId = parseInt(
-    locationCollection?.getElementsByTagName("gml:identifier")?.[0]
-      ?.textContent ?? "",
-  );
-  const location =
-    locationCollection.getElementsByTagName("gml:name")?.[0].textContent ?? "";
-  const members = Array.from(doc.getElementsByTagName("wfs:member")).map(
-    (member) => {
-      const series = member.getElementsByTagName(
-        "wml2:MeasurementTimeseries",
-      )[0];
-      const points = Array.from(series.getElementsByTagName("wml2:point"));
-      const pointValues = [];
+  const positionString = doc
+    .getElementsByTagName("gmlcov:positions")[0]
+    .textContent?.trim();
+  const positionLines = positionString?.split("\n").map((line) => line.trim());
+  const positions = positionLines?.map((line) => line.split(" "));
+  const timeStamps = positions?.map((arr) => arr.at(-1));
 
-      for (const point of points) {
-        const time = new Date(
-          point.getElementsByTagName("wml2:time")[0].textContent ?? "",
-        );
-        const value = parseFloat(
-          `${point.getElementsByTagName("wml2:value")[0].textContent}`,
-        );
+  const fieldTypes = Array.from(doc.getElementsByTagName("swe:field"));
+  const fieldNames = fieldTypes.map((field) => field.getAttribute("name"));
 
-        pointValues.push({ time, value });
-      }
+  const forecastValueString = doc
+    .getElementsByTagName("gml:doubleOrNilReasonTupleList")[0]
+    .textContent?.trim();
+  const forecastLines = forecastValueString
+    ?.split("\n")
+    .map((line) => line.trim());
+  const forecastValues = forecastLines?.map((line) => line.split(" "));
 
-      return {
-        type: series.getAttribute("gml:id")?.replace("mts-1-1-", ""),
-        values: pointValues,
-      };
-    },
-  );
+  const valueIndexes = [
+    fieldNames.indexOf("Temperature"),
+    fieldNames.indexOf("WindDirection"),
+    fieldNames.indexOf("WindSpeedMS"),
+  ];
 
-  return { geoId, location, members };
+  const forecasts = new Map<
+    string | undefined,
+    {
+      temperature: number;
+      windDirection: number;
+      windSpeedMS: number;
+    }
+  >();
+
+  timeStamps?.forEach((time, i) => {
+    forecasts.set(time, {
+      temperature: parseFloat(`${forecastValues?.[i]?.[valueIndexes[0]]}`),
+      windDirection: parseFloat(`${forecastValues?.[i]?.[valueIndexes[1]]}`),
+      windSpeedMS: parseFloat(`${forecastValues?.[i]?.[valueIndexes[2]]}`),
+    });
+  });
+
+  return forecasts;
 }
 
 export function useForecasts(place: string | null) {

@@ -1,4 +1,4 @@
-import { addDays, getClosestFullHour } from "@/utils/time";
+import { addDays, getNextFullHour } from "@/utils/time";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./constants";
 
@@ -13,7 +13,7 @@ async function fetchData(place: string | null) {
 }
 
 function getUrlWithParams(place: string | null) {
-  const startTime = getClosestFullHour();
+  const startTime = getNextFullHour();
   const startTimeString = startTime.toISOString();
   const endTime = addDays(startTime, 1);
   const endTimeString = endTime.toISOString();
@@ -47,6 +47,7 @@ function traverseXML(xml: string) {
     fieldNames.indexOf("Temperature"),
     fieldNames.indexOf("WindDirection"),
     fieldNames.indexOf("WindSpeedMS"),
+    fieldNames.indexOf("WeatherSymbol3"),
   ];
 
   const forecasts = new Map<
@@ -55,6 +56,7 @@ function traverseXML(xml: string) {
       temperature: number;
       windDirection: number;
       windSpeedMS: number;
+      weatherSymbol: number;
     }
   >();
 
@@ -63,6 +65,7 @@ function traverseXML(xml: string) {
       temperature: parseFloat(`${forecastValues?.[i]?.[valueIndexes[0]]}`),
       windDirection: parseFloat(`${forecastValues?.[i]?.[valueIndexes[1]]}`),
       windSpeedMS: parseFloat(`${forecastValues?.[i]?.[valueIndexes[2]]}`),
+      weatherSymbol: parseInt(`${forecastValues?.[i]?.[valueIndexes[3]]}`),
     });
   });
 

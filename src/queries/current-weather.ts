@@ -22,17 +22,11 @@ function traverseXML(xml: string) {
   const doc = parser.parseFromString(xml, "application/xml");
 
   const temperatures = Array.from(doc.getElementsByTagName("om:result"))[0];
-  const latestMeasurement = Array.from(
-    temperatures.getElementsByTagName("wml2:MeasurementTVP"),
-  ).at(-1);
-  const temperature = parseFloat(
-    latestMeasurement?.getElementsByTagName("wml2:value")[0].textContent ?? "",
-  );
-  const time = new Date(
-    latestMeasurement?.getElementsByTagName("wml2:time")[0].textContent ?? "",
-  );
+  const temperature =
+    Array.from(temperatures.getElementsByTagName("wml2:value")).at(-1)
+      ?.textContent ?? "";
 
-  return { temperature, time };
+  return temperature;
 }
 
 export function useCurrentWeather(place: string | null) {

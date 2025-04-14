@@ -14,25 +14,24 @@ export function CurrentWeather() {
     return null;
   }
 
-  const latestForecastValue = Array.from(forecastData.values())[0];
-  const weatherStringAndSymbol = getWeatherStringAndSymbol(
+  const latestForecastValue = forecastData[0];
+  const [weatherString, Icon] = getWeatherStringAndSymbol(
     latestForecastValue.weatherSymbol,
   );
-  const Icon = weatherStringAndSymbol?.[1];
 
   return (
     <div className="relative">
       <h1 className="mb-2 text-center text-7xl font-extralight">
         {`${formatDecimal(parseFloat(data))}°C`}
       </h1>
+
       <h2 className="text-center font-extralight opacity-75">
-        {weatherStringAndSymbol?.[0]}
+        {weatherString}
       </h2>
-      {Icon ? (
-        <div className="absolute inset-x-0 top-1/2 grid -translate-y-5/9 place-items-center opacity-5">
-          <Icon fill="currentcolor" height={280} width={280} />
-        </div>
-      ) : null}
+
+      <div className="absolute inset-x-0 top-1/2 grid -translate-y-1/2 place-items-center opacity-5">
+        <Icon fill="currentcolor" height={280} width={280} />
+      </div>
     </div>
   );
 }

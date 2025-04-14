@@ -5,12 +5,17 @@ import {
   Misty,
   PartlyCloudy,
   Rainy,
+  Sad,
   Sleet,
   Snowy,
   Thunder,
 } from "@/components/atoms/icons";
+import { ComponentType, SVGProps } from "react";
 
-const weatherStringsAndSymbols = {
+const weatherStringsAndSymbols: Record<
+  number,
+  [string, ComponentType<SVGProps<SVGSVGElement>>]
+> = {
   1: ["Clear", Clear],
   2: ["Partly Cloudy", PartlyCloudy],
   3: ["Cloudy", Cloudy],
@@ -38,12 +43,14 @@ const weatherStringsAndSymbols = {
   83: ["Heavy Sleet", Sleet],
   91: ["Misty", Misty],
   92: ["Foggy", Foggy],
-} as const;
+};
 
-export function getWeatherStringAndSymbol(code: number) {
-  if (!(code in weatherStringsAndSymbols)) return null;
+export function getWeatherStringAndSymbol(
+  weatherSymbolCode: number,
+): [string, ComponentType<SVGProps<SVGSVGElement>>] {
+  if (!weatherStringsAndSymbols[weatherSymbolCode]) {
+    return ["Unknown", Sad];
+  }
 
-  return weatherStringsAndSymbols[
-    code as keyof typeof weatherStringsAndSymbols
-  ];
+  return weatherStringsAndSymbols[weatherSymbolCode];
 }

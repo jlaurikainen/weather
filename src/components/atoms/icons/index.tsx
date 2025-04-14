@@ -7,6 +7,7 @@ import IconLocation from "@material-symbols/svg-400/outlined/location_on.svg?rea
 import Misty from "@material-symbols/svg-400/outlined/mist.svg?react";
 import PartlyCloudy from "@material-symbols/svg-400/outlined/partly_cloudy_day.svg?react";
 import Rainy from "@material-symbols/svg-400/outlined/rainy.svg?react";
+import Sad from "@material-symbols/svg-400/outlined/sentiment_sad.svg?react";
 import Thunder from "@material-symbols/svg-400/outlined/thunderstorm.svg?react";
 import Sleet from "@material-symbols/svg-400/outlined/weather_hail.svg?react";
 import Snowy from "@material-symbols/svg-400/outlined/weather_snowy.svg?react";
@@ -21,6 +22,7 @@ export {
   Misty,
   PartlyCloudy,
   Rainy,
+  Sad,
   Sleet,
   Snowy,
   Thunder,

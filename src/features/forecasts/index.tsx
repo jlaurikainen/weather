@@ -8,8 +8,8 @@ export function Forecasts() {
 
   return (
     <div className="flex max-w-full self-center overflow-x-auto p-2 opacity-75">
-      {Array.from(data?.entries() ?? []).map(([time, values]) => (
-        <Forecast key={time} time={time} values={values} />
+      {data?.map((values) => (
+        <Forecast key={values.time?.toString()} {...values} />
       ))}
     </div>
   );

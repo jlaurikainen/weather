@@ -29,11 +29,7 @@ function traverseXML(xml: string) {
     .getElementsByTagName("gmlcov:positions")[0]
     .textContent?.trim();
   const positionLines = positionString?.split("\n").map((line) => line.trim());
-  const positions = positionLines?.map((line) => line.split(" "));
-  const timeStamps = positions?.map((arr) => arr.at(-1));
-
-  const fieldTypes = Array.from(doc.getElementsByTagName("swe:field"));
-  const fieldNames = fieldTypes.map((field) => field.getAttribute("name"));
+  const timeStamps = positionLines?.map((line) => line.split(" ").at(-1));
 
   const forecastValueString = doc
     .getElementsByTagName("gml:doubleOrNilReasonTupleList")[0]
@@ -43,6 +39,9 @@ function traverseXML(xml: string) {
     .map((line) => line.trim());
   const forecastValues = forecastLines?.map((line) => line.split(" "));
 
+  const fieldNames = Array.from(doc.getElementsByTagName("swe:field")).map(
+    (field) => field.getAttribute("name"),
+  );
   const valueIndexes = [
     fieldNames.indexOf("Temperature"),
     fieldNames.indexOf("WindDirection"),
@@ -50,24 +49,13 @@ function traverseXML(xml: string) {
     fieldNames.indexOf("WeatherSymbol3"),
   ];
 
-  const forecasts = new Map<
-    string | undefined,
-    {
-      temperature: number;
-      windDirection: number;
-      windSpeedMS: number;
-      weatherSymbol: number;
-    }
-  >();
-
-  timeStamps?.forEach((time, i) => {
-    forecasts.set(time, {
-      temperature: parseFloat(`${forecastValues?.[i]?.[valueIndexes[0]]}`),
-      windDirection: parseFloat(`${forecastValues?.[i]?.[valueIndexes[1]]}`),
-      windSpeedMS: parseFloat(`${forecastValues?.[i]?.[valueIndexes[2]]}`),
-      weatherSymbol: parseInt(`${forecastValues?.[i]?.[valueIndexes[3]]}`),
-    });
-  });
+  const forecasts = timeStamps?.map((time, i) => ({
+    temperature: parseFloat(`${forecastValues?.[i]?.[valueIndexes[0]]}`),
+    time: parseInt(time ?? ""),
+    weatherSymbol: parseInt(`${forecastValues?.[i]?.[valueIndexes[3]]}`),
+    windDirection: parseFloat(`${forecastValues?.[i]?.[valueIndexes[1]]}`),
+    windSpeedMS: parseFloat(`${forecastValues?.[i]?.[valueIndexes[2]]}`),
+  }));
 
   return forecasts;
 }

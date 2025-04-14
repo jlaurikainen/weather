@@ -14,7 +14,7 @@ export function App() {
     <Fragment>
       <LicenseInfo />
 
-      <div className="flex flex-1 flex-col justify-center gap-32">
+      <div className="flex flex-1 flex-col justify-evenly">
         <CurrentWeather />
         <Forecasts />
       </div>

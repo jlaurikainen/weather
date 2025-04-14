@@ -1,4 +1,4 @@
-export function getClosestFullHour() {
+export function getNextFullHour() {
   const currentTime = new Date();
   currentTime.setMinutes(0, 0, 0);
 

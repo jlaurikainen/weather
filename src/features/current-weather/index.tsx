@@ -16,7 +16,7 @@ export function CurrentWeather() {
       <h1 className="mb-2 text-center text-7xl font-extralight">
         {`${formatDecimal(data.temperature)}°C`}
       </h1>
-      <h2 className="text-center text-2xl font-extralight">
+      <h2 className="text-center text-2xl font-extralight opacity-75">
         {data.time.toLocaleTimeString("fi", {
           hour: "numeric",
           minute: "2-digit",
